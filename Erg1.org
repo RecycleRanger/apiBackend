@@ -1,0 +1,19 @@
+#+title: Lucid Framework(Εργασία 1)
+
+* Task 1: Create a High Concept Statement for the product
+
+* Task 2: Identify the business objectives the product wil serve
+
+* Task 3: Identify the user population
+
+* Task 4: Identify usability goals
+
+* Task 5: Identify high-level constrains
+
+* Task 6: Identify high-level functionality
+
+* Task 7: Produce screen sketches
+
+* Task 8: Create the project plan
+
+* Task 9: Create the UI Roadmap
