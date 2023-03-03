@@ -8,6 +8,14 @@ RecycleRanger is a waste reduction and sustainability app for kids. It tracks wa
 
 * Task 3: Identify the user population
 
+| User                          | Age Range |
+|-------------------------------+-----------|
+| kidergarten students          | 5         |
+| early primary school students | 6 - 9     |
+|-------------------------------+-----------|
+
+Also the teachers of those classes
+
 * Task 4: Identify usability goals
 
 * Task 5: Identify high-level constrains
