@@ -18,6 +18,15 @@ Also the teachers of those classes
 
 * Task 4: Identify usability goals
 
+- Types of users:
+
+  - Novice users. Don't need any technical knowledge
+
+- Training and support:
+
+  - No Training or support needed
+
+
 * Task 5: Identify high-level constrains
 
 * Task 6: Identify high-level functionality
