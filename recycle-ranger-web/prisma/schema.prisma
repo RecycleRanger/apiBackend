@@ -10,15 +10,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  String?
-}
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -33,7 +24,7 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user Teacher @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -43,18 +34,18 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         Teacher  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
+model Teacher {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  image         String?
+  classId       Int       @unique @default(autoincrement())
   accounts      Account[]
   session       Session[]
-  post          Post[]
+  students      Student[]
 }
 
 model VerificationToken {
@@ -63,4 +54,22 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Student {
+  id        Int             @id @default(autoincrement())
+  name      String
+  password  String
+  score     Int
+  teacher   Teacher         @relation(fields: [classId], references: [classId])
+  classId   Int
+  wastTrack WasteTracking[]
+}
+
+model WasteTracking {
+  userId     Int      @id
+  student    Student  @relation(fields: [userId], references: [id])
+  date       DateTime
+  trashType  String
+  trashScore Int
 }
