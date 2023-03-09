@@ -24,7 +24,7 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  user Teacher @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -34,19 +34,31 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         Teacher  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Teacher {
+model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  image         String?
   classId       Int       @unique @default(autoincrement())
   accounts      Account[]
-  session       Session[]
-  students      Student[]
+  sessions      Session[]
 }
+
+// model Teacher {
+//   id            String    @id @default(cuid())
+//   name          String?
+//   email         String?   @unique
+//   emailVerified DateTime?
+//   image         String?
+//   classId       Int       @unique @default(autoincrement())
+//   accounts      Account[]
+//   session       Session[]
+//   students      Student[]
+// }
 
 model VerificationToken {
   identifier String
@@ -61,7 +73,7 @@ model Student {
   name      String
   password  String
   score     Int
-  teacher   Teacher         @relation(fields: [classId], references: [classId])
+  // teacher   User @relation(fields: [classId], references: [classId])
   classId   Int
   wastTrack WasteTracking[]
 }
