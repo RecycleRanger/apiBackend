@@ -24,6 +24,10 @@ For student's using the app:
 
 - The ui will need to be friendly for kids to use and also be stimulating in order not to be boring to them.
 
+- Needs to be intiuitive and not let them make any mistake.
+
+- No guidance needed from the teacher.
+
 - It will need to capture their intrest and provide some type of reward to encourage them keep playing the game.
 
 For the teacher's using the app:
