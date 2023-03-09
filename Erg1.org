@@ -6,6 +6,8 @@ RecycleRanger is a waste reduction and sustainability app for kids. It tracks wa
 
 * Task 2: Identify the business objectives the product wil serve
 
+RecycleRanger app is a game designed to increase the environmental sensitivity of the elementary school student’s, especially on recycling. Our goal is to motivate them to change their everyday habits based on a small competition, in order to make them responsible civilians.
+
 * Task 3: Identify the user population
 
 | User                          | Age Range |
@@ -18,14 +20,17 @@ Also the teachers of those classes
 
 * Task 4: Identify usability goals
 
-- Types of users:
+For student's using the app:
 
-  - Novice users. Don't need any technical knowledge
+- The ui will need to be friendly for kids to use and also be stimulating in order not to be boring to them.
 
-- Training and support:
+- It will need to capture their intrest and provide some type of reward to encourage them keep playing the game.
 
-  - No Training or support needed
+For the teacher's using the app:
 
+- The ui should not be confusing in order for them to manage the whole process smoothly(needs to be really intuitive).
+
+- Have administrative access over the class through the app
 
 * Task 5: Identify high-level constrains
 
