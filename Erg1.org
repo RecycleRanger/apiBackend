@@ -44,4 +44,13 @@ For the teacher's using the app:
 
 * Task 8: Create the project plan
 
+| TODO                                                 | time needed                                                              | Description                                                                          |
+|------------------------------------------------------+--------------------------------------------------------------------------+--------------------------------------------------------------------------------------|
+| DataBase setup                                       | 1 day                                                                    | Setup Postgresql database and interface it with prisma to the webapp                 |
+| Api setup                                            | 4 days                                                                   | Design and setup all the api endpoints for usage with the webapp and the android app |
+| Begin Ui for web app                                 | 6 days                                                                   | Begin with the ui for the webapp: Login page, student main page, teacher admin page  |
+| Android app setup(Depends what we learn on the lab)* | maybe 7 days(I don't know. I have never done something like this before) | Port the same ui from the webapp to the android app                                  |
+
+*/If we don't have the time to make the android app in kotlin, we will just port the webapp using react native./
+
 * Task 9: Create the UI Roadmap
