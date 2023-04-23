@@ -18,8 +18,7 @@ class Settings(BaseSettings):
     # Change the origins when in production
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 
-    # SQLALCHEMY_DB_URI: str = "postgresql://postgres:ZfT3%%40drQofi4HnNGrM@db.bvwtysuubvotqenckxpr.supabase.co:6543/postgres"
-    SQLALCHEMY_DB_URI: str = "postgres://postgres:6DoEJXI2DPDyLpu7@db.qlcthgswjjqohdtkzyad.supabase.co:6543/postgres"
+    SQLALCHEMY_DB_URI: str = ""
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(

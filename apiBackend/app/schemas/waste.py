@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from app.schemas.waste import Waste
-
 
 class WasteBase(BaseModel):
     student_id: int

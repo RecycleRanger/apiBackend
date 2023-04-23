@@ -18,7 +18,12 @@ def root(
     """
     Root GET
     """
-    return {"request": request, "msg": "hello world"}
+    return {"msg": "hello world"}
+
+@root_router.get("/test", status_code=200)
+def test(db: Session = Depends(deps.get_db)):
+    # TODO: change /models structure. Add them to __init__.py
+    return crud.student.get_multi(db=db)
 
 # app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)

@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
+if TYPE_CHECKING:
+    from .waste import Waste
+    from .teacher import Teacher
 
 class Student(Base):
     # __tablename__ = "student"
@@ -17,4 +21,4 @@ class Student(Base):
 
     teacherSub = relationship("Teacher", back_populates="students")
 
-    waste_tracking = relationship("Waste", back_populates="student")
+    waste_tracking = relationship("Waste", back_populates="student_owner")

@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.base_class import Base
+
+if TYPE_CHECKING:
+    from .student import Student
 
 
 class Waste(Base):
@@ -14,4 +19,4 @@ class Waste(Base):
     trash_type = Column(String, nullable=False)
     trash_score = Column(Integer, nullable=False)
 
-    student = relationship("Student", back_populates="waste_tracking")
+    student_owner = relationship("Student", back_populates="waste_tracking")
