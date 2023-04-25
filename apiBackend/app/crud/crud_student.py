@@ -30,8 +30,11 @@ class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
             skip: int = 0,
             limit: int = 100,
     ) -> List[Student]:
-        students = self.get_class(db, skip, limit)
-        test = jsonable_encoder(students[0])
+        students = self.get_class(db=db, class_id=class_id, skip=skip, limit=limit)
+        students = jsonable_encoder(students)
+        for student in students:
+            del student["hashed_password"]
+            del student["numOfTrash"]
 
         return students
 
