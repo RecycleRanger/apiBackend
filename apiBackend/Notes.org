@@ -1,0 +1,55 @@
+
+
+* Database
+
+** Entity Relationship Diagram
+
+#+begin_src mermaid :file erDiagram.png
+erDiagram
+	Teacher ||--o{ Student: class_id
+	Teacher {
+	int id PK
+	string username
+	string hashed_password
+	timestamp date_started
+	}
+
+	Student ||--o{ Waste: student_id
+	Student {
+	int id PK
+	string student_name
+	string hashed_password
+	int score
+	int class_id FK
+	int numOfTrash
+	}
+
+	Waste {
+	int id PK
+	int student_id FK
+	timestamp date_added
+	string trash_type
+	int trash_score
+	}
+#+end_src
+
+#+RESULTS:
+[[file:erDiagram.png]]
+
+* API
+
+** Endpoints
+
+GET: /class/{teacher.id}/	User: Teacher
+|	db {query Student table
+|		class_id == teacher_id}
+|--> Return: list[Students]
+
+POST: /class/{teacher.id}/	User: Teacher
+|
+
+** Sequence Diagram
+
+#+begin_src mermaid :file api_sqD.png
+sequenceDiagram
+#+end_src
