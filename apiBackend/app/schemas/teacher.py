@@ -8,14 +8,20 @@ class TeacherBase(BaseModel):
     username: str
 
 class TeacherCreate(TeacherBase):
-    hashed_password: str
+    password: str
 
 class TeacherUpdate(TeacherBase):
     ...
 
-class Teacher(TeacherBase):
+class TeacherInDBBase(TeacherBase):
     id: int
     students: list[Student] = []
 
     class Config:
         orm_mode = True
+
+class TeacherInDB(TeacherInDBBase):
+    hashed_password: str
+
+class Teacher(TeacherInDBBase):
+    ...

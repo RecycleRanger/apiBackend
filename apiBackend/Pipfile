@@ -10,6 +10,8 @@ alembic = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
 pydantic = {extras = ["dotenv"], version = "*"}
+passlib = "*"
+python-jose = "*"
 
 [dev-packages]
 
