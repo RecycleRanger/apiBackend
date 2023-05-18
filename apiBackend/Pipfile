@@ -14,6 +14,9 @@ passlib = "*"
 python-jose = "*"
 python-multipart = "*"
 
+[scripts]
+dev = "python app/main.py"
+
 [dev-packages]
 
 [requires]
