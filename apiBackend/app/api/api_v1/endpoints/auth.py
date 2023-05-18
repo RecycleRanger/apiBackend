@@ -38,10 +38,21 @@ def login(
         "token_type": "bearer",
     }
 
+@router.get("/me", response_model=schemas.Teacher)
+def read_users_me(
+        current_user: Teacher = Depends(deps.get_current_user)
+):
+    """
+    Fetch the current logged in user.
+    """
+
+    user = current_user
+    return user
+
 @router.post("/signup/teacher", response_model=schemas.Teacher, status_code=201)
 def create_teacher_signup(
         *,
-        db: Session,
+        db: Session = Depends(deps.get_db),
         teacher_in: schemas.teacher.TeacherCreate,
 ) -> Any:
     """
@@ -49,7 +60,7 @@ def create_teacher_signup(
     """
 
     teacher = db.query(Teacher) \
-                .filter(Teacher.username == teacher_in.username)\
+                .filter(Teacher.username == teacher_in.username) \
                 .first()
     if teacher:
         raise HTTPException(

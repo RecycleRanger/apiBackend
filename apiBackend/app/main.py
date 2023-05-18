@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app import crud, schemas
 from app.api import deps
 from app.schemas.teacher import TeacherCreate
-# from app.api.api_v1 import api_router
+from app.api.api_v1.api import api_router
 from app.core.config import settings
 
 
@@ -26,7 +26,7 @@ def root(
 def test(class_id: int, db: Session = Depends(deps.get_db)):
     return crud.student.get_class_cens(db=db, class_id=class_id)
 
-@root_router.post("/test/createteacher", response_model=schemas.Teacher)
+@root_router.post("/test/createteacher", response_model=schemas.Teacher, status_code=201)
 def create_teacher(
         *,
         db: Session = Depends(deps.get_db),
@@ -35,7 +35,7 @@ def create_teacher(
     teacher = crud.teacher.create(db=db, obj_in=teacher_in)
     return teacher
 
-# app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)
 
 if __name__=="__main__":

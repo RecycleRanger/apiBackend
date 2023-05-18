@@ -12,6 +12,7 @@ psycopg2-binary = "*"
 pydantic = {extras = ["dotenv"], version = "*"}
 passlib = "*"
 python-jose = "*"
+python-multipart = "*"
 
 [dev-packages]
 

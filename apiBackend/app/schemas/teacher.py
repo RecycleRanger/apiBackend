@@ -1,3 +1,5 @@
+from datetime import date, datetime, timedelta
+
 from pydantic import BaseModel
 
 from typing import Sequence
@@ -11,11 +13,11 @@ class TeacherCreate(TeacherBase):
     password: str
 
 class TeacherUpdate(TeacherBase):
-    ...
+    date_started: timedelta
 
 class TeacherInDBBase(TeacherBase):
     id: int
-    students: list[Student] = []
+    # students: list[Student] = []
 
     class Config:
         orm_mode = True
