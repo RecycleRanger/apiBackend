@@ -34,7 +34,7 @@ def login(
             detail="Incorect username or password"
         )
     return {
-        "access_token": create_access_token(sub=teacher.id),
+        "access_token": create_access_token(sub=teacher.id, usr="teacher"),
         "token_type": "bearer",
     }
 

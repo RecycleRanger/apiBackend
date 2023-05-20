@@ -6,6 +6,7 @@ from sqlalchemy.orm.session import Session
 from jose import jwt
 
 from app.models.teacher import Teacher
+from app import schemas
 from app.core.config import settings
 from app.core.security import verify_password
 
@@ -35,17 +36,19 @@ def authenticate(
         return None
     return teacher
 
-def create_access_token(*, sub: str) -> str:
+def create_access_token(*, sub: str, usr: str) -> str:
     return _create_token(
         token_type="access_token",
         lifetime=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
         sub=sub,
+        usr=usr,
     )
 
 def _create_token(
         token_type: str,
         lifetime: timedelta,
         sub: str,
+        usr: str,
 ) -> str:
     payload = {}
     expire = datetime.utcnow() + lifetime
@@ -53,6 +56,7 @@ def _create_token(
     payload["exp"] = expire
     payload["iat"] = datetime.utcnow()
     payload["sub"] = str(sub)
+    payload["usr"] = str(usr)
 
     return jwt.encode(
         payload,
