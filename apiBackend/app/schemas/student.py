@@ -9,14 +9,20 @@ class StudentBase(BaseModel):
     class_id: int
 
 class StudentCreate(StudentBase):
-    hashed_password: str
+    password: str
 
 class StudentUpdate(StudentBase):
     ...
 
-class Student(StudentBase):
+class StudentInDBBase(StudentBase):
     id: int
     waste_tracking: list[Waste] = []
 
     class Config:
         orm_mode = True
+
+class StudentInDB(StudentInDBBase):
+    hashed_password: str
+
+class Student(StudentInDBBase):
+    ...

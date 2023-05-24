@@ -6,6 +6,7 @@ from sqlalchemy.orm.session import Session
 from jose import jwt
 
 from app.models.teacher import Teacher
+from app.models.student import Student
 from app import schemas
 from app.core.config import settings
 from app.core.security import verify_password
@@ -16,25 +17,40 @@ JWTPayloadMapping = MutableMapping[
     Union[datetime, bool, str, List[str], List[int]]
 ]
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login/teacher")
+teacher_oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_STR}/auth/login/teacher",
+    scheme_name="teacher_oauth2_scheme"
+)
+
+student_oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_STR}/auth/login/student",
+    scheme_name="student_oauth2_scheme"
+)
 
 def authenticate(
         *,
         username: str,
         password: str,
         db: Session,
-) -> Optional[Teacher]:
+        usrType: str,
+) -> Teacher | Student | None:
 
     # type: ignore
-    teacher = db.query(Teacher) \
-                .filter(Teacher.username == username) \
-                .first()
+    if usrType == "teacher":
+        user = db.query(Teacher) \
+                    .filter(Teacher.username == username) \
+                    .first()
+    else:
+        user = db.query(Student) \
+                 .filter(Student.student_name == username) \
+                 .first()
 
-    if not teacher:
+    if not user:
         return None
-    if not verify_password(password, teacher.hashed_password):
+
+    if not verify_password(password, user.hashed_password):
         return None
-    return teacher
+    return user
 
 def create_access_token(*, sub: str, usr: str) -> str:
     return _create_token(

@@ -1,14 +1,15 @@
-from typing import Generator, Optional
+from typing import Generator, Optional, Any, Union
 
 from fastapi import Depends, HTTPException, status
 from jose import jwt, JWTError
 from pydantic import BaseModel
 from sqlalchemy.orm.session import Session
 
-from app.core.auth import oauth2_scheme
+from app.core.auth import teacher_oauth2_scheme, student_oauth2_scheme
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.models.teacher import Teacher
+from app.models.student import Student
 
 
 class TokenData(BaseModel):
@@ -22,9 +23,75 @@ def get_db() -> Generator:
     finally:
         db.close()
 
+async def get_user(
+        db: Session = Depends(get_db),
+        teacher_token: str = Depends(teacher_oauth2_scheme),
+        student_token: str = Depends(student_oauth2_scheme),
+) -> Any:
+
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+
+    try:
+        # Teacher payload
+        payload = jwt.decode(
+            teacher_token,
+            settings.JWT_SECRET,
+            algorithms=[settings.ALGORITHM],
+            options={"verify_aud": False},
+        )
+
+        user_id: Optional[str] = payload.get("sub")
+        type: Optional[str] = payload.get("usr")
+        if user_id is None or type is None:
+            raise credentials_exception
+        token_data = TokenData(username=user_id)
+    except JWTError:
+        try:
+            payload = jwt.decode(
+                student_token,
+                settings.JWT_SECRET,
+                algorithms=[settings.ALGORITHM],
+                options={"verify_aud": False}
+            )
+
+            user_id: Optional[str] = payload.get("sub")
+            type: Optional[str] = payload.get("usr")
+            if user_id is None or type is None:
+                raise credentials_exception
+            token_data = TokenData(username=user_id)
+        except JWTError:
+            raise credentials_exception
+
+    if type == "teacher":
+        teacher = db.query(Teacher) \
+                    .filter(Teacher.id == token_data.username) \
+                    .first()
+        if teacher is None:
+            raise credentials_exception
+
+        return {
+            "user": teacher.__dict__,
+            "type": type
+        }
+    elif type == "student":
+        student = db.query(Student) \
+                    .filter(Student.id == user_id) \
+                    .first()
+        if student is None:
+            raise credentials_exception
+        return {
+            "user": student.__dict__,
+            "type": type
+        }
+    raise credentials_exception
+
 async def get_current_user(
         db: Session = Depends(get_db),
-        token: str = Depends(oauth2_scheme)
+        token: str = Depends(teacher_oauth2_scheme),
 ) -> Teacher:
 
     credentials_exception = HTTPException(
