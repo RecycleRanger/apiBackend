@@ -45,8 +45,9 @@ GET: /class/{teacher.id}/	User: Teacher
 |		class_id == teacher_id}
 |--> Return: list[Students]
 
-POST: /class/{teacher.id}/	User: Teacher
-|
+POST: /class/{teacher.id}/autogenerate?n=0	User: Teacher
+|	Create list[Students] len==n 
+|--> Return: list[dict[str, Union[str, int]]]
 
 ** Sequence Diagram
 

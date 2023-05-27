@@ -48,6 +48,13 @@ def authenticate(
 
     if not user:
         return None
+<<<<<<< Updated upstream
+=======
+    # type: ignore
+    if not verify_password(password, teacher.hashed_password):
+        return None
+    return teacher
+>>>>>>> Stashed changes
 
     if not verify_password(password, user.hashed_password):
         return None
