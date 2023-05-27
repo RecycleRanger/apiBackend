@@ -1,0 +1,64 @@
+{
+  "teacherDummyData": [
+    {
+      "id": 1,
+      "username": "teacher1",
+      "hashed_password": "password1",
+      "date_started": "2022-01-01 09:00:00"
+    },
+    {
+      "id": 2,
+      "username": "teacher2",
+      "hashed_password": "password2",
+      "date_started": "2022-02-01 10:00:00"
+    },
+    {
+      "id": 3,
+      "username": "teacher3",
+      "hashed_password": "password3",
+      "date_started": "2022-03-01 11:00:00"
+    },
+    {
+      "id": 4,
+      "username": "teacher4",
+      "hashed_password": "password4",
+      "date_started": "2022-04-01 12:00:00"
+    },
+    {
+      "id": 5,
+      "username": "teacher5",
+      "hashed_password": "password5",
+      "date_started": "2022-05-01 13:00:00"
+    },
+    {
+      "id": 6,
+      "username": "teacher6",
+      "hashed_password": "password6",
+      "date_started": "2022-06-01 14:00:00"
+    },
+    {
+      "id": 7,
+      "username": "teacher7",
+      "hashed_password": "password7",
+      "date_started": "2022-07-01 15:00:00"
+    },
+    {
+      "id": 8,
+      "username": "teacher8",
+      "hashed_password": "password8",
+      "date_started": "2022-08-01 16:00:00"
+    },
+    {
+      "id": 9,
+      "username": "teacher9",
+      "hashed_password": "password9",
+      "date_started": "2022-09-01 17:00:00"
+    },
+    {
+      "id": 10,
+      "username": "teacher10",
+      "hashed_password": "password10",
+      "date_started": "2022-10-01 18:00:00"
+    }
+  ]
+}

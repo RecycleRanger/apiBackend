@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+alembic = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+pydantic = {extras = ["dotenv"], version = "*"}
+passlib = "*"
+python-jose = "*"
+python-multipart = "*"
+
+[scripts]
+export = "export PYTHONPATH=$PWD"
+dev = "python app/main.py"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

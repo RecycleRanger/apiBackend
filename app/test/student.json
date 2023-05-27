@@ -1,0 +1,84 @@
+{
+  "studentDummyData": [
+    {
+      "id": 1,
+      "student_name": "John",
+      "hashed_password": "password1",
+      "score": 80,
+      "numOfTrash": 5,
+      "class_id": 1
+    },
+    {
+      "id": 2,
+      "student_name": "Jane",
+      "hashed_password": "password2",
+      "score": 75,
+      "numOfTrash": 3,
+      "class_id": 1
+    },
+    {
+      "id": 3,
+      "student_name": "Bob",
+      "hashed_password": "password3",
+      "score": 90,
+      "numOfTrash": 1,
+      "class_id": 1
+    },
+    {
+      "id": 4,
+      "student_name": "Alice",
+      "hashed_password": "password4",
+      "score": 85,
+      "numOfTrash": 7,
+      "class_id": 1
+    },
+    {
+      "id": 5,
+      "student_name": "Tom",
+      "hashed_password": "password5",
+      "score": 95,
+      "numOfTrash": 4,
+      "class_id": 1
+    },
+    {
+      "id": 6,
+      "student_name": "Sara",
+      "hashed_password": "password6",
+      "score": 70,
+      "numOfTrash": 2,
+      "class_id": 1
+    },
+    {
+      "id": 7,
+      "student_name": "David",
+      "hashed_password": "password7",
+      "score": 78,
+      "numOfTrash": 9,
+      "class_id": 1
+    },
+    {
+      "id": 8,
+      "student_name": "Lisa",
+      "hashed_password": "password8",
+      "score": 88,
+      "numOfTrash": 6,
+      "class_id": 1
+    },
+    {
+      "id": 9,
+      "student_name": "Mike",
+      "hashed_password": "password9",
+      "score": 92,
+      "numOfTrash": 8,
+      "class_id": 1
+    },
+    {
+      "id": 10,
+      "student_name": "Emily",
+      "hashed_password": "password10",
+      "score": 82,
+      "numOfTrash": 0,
+      "class_id": 1
+    }
+  ]
+}
