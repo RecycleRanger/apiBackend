@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Union, Callable
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -9,6 +9,7 @@ from app.crud import student
 from app.models.teacher import Teacher
 from app.models.student import Student
 from app import schemas
+from app.core.types import UsrType
 
 
 router = APIRouter()
@@ -24,6 +25,10 @@ def get_class(
     """
     Get all the Students of a class
     """
+    credential_error: Callable[[str], Any] = lambda msg: HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=msg,
+    )
 
     if current_user.get("type") == "teacher":
         user = schemas.Teacher(**(current_user.get("user")))
@@ -34,6 +39,9 @@ def get_class(
                 skip=skip,
                 limit=limit,
             )
+        else:
+            raise credential_error("You are trying to access a class that doesn't belong to you.")
+
     elif current_user.get("type") == "student":
         user = schemas.Student(**(current_user.get("user")))
         if user.class_id == teacher_id:
@@ -43,8 +51,6 @@ def get_class(
                 skip=skip,
                 limit=limit,
             )
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You don't have access to this information. Please log in."
-        )
+        else:
+            raise credential_error("You are trying to access a class you are not a member of.")
+    raise credential_error("You don't have access to this information. Please log in.")

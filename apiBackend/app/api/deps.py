@@ -1,15 +1,19 @@
 from typing import Generator, Optional, Any, Union
+from dataclasses import dataclass
 
 from fastapi import Depends, HTTPException, status
 from jose import jwt, JWTError
 from pydantic import BaseModel
 from sqlalchemy.orm.session import Session
 
+from app.core.types import UsrType, Payload
 from app.core.auth import teacher_oauth2_scheme, student_oauth2_scheme
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.models.teacher import Teacher
 from app.models.student import Student
+from app.crud import crud_teacher
+from app.crud import crud_student
 
 
 class TokenData(BaseModel):
@@ -43,9 +47,11 @@ async def get_user(
             algorithms=[settings.ALGORITHM],
             options={"verify_aud": False},
         )
+        payload = Payload(**payload)
 
-        user_id: Optional[str] = payload.get("sub")
-        type: Optional[str] = payload.get("usr")
+        user_id: Optional[str] = payload.sub
+        # TODO: Left here
+        type: UsrType = payload.usr
         if user_id is None or type is None:
             raise credentials_exception
         token_data = TokenData(username=user_id)
@@ -57,34 +63,36 @@ async def get_user(
                 algorithms=[settings.ALGORITHM],
                 options={"verify_aud": False}
             )
+            payload = Payload(**payload)
 
-            user_id: Optional[str] = payload.get("sub")
-            type: Optional[str] = payload.get("usr")
+            user_id: Optional[str] = payload.sub
+            type: UsrType = payload.usr
             if user_id is None or type is None:
                 raise credentials_exception
             token_data = TokenData(username=user_id)
         except JWTError:
             raise credentials_exception
 
-    if type == "teacher":
-        teacher = db.query(Teacher) \
-                    .filter(Teacher.id == token_data.username) \
-                    .first()
-        if teacher is None:
+    if type == UsrType.teacher:
+        teacher_data = crud_teacher.teacher.get(
+            db=db,
+            id=token_data.username
+        )
+        if teacher_data is None:
             raise credentials_exception
-
         return {
-            "user": teacher.__dict__,
+            "user": teacher_data.__dict__,
             "type": type
         }
-    elif type == "student":
-        student = db.query(Student) \
-                    .filter(Student.id == user_id) \
-                    .first()
-        if student is None:
+    elif type == UsrType.student:
+        student_data = crud_student.student.get(
+            db=db,
+            id=token_data.username
+        )
+        if student_data is None:
             raise credentials_exception
         return {
-            "user": student.__dict__,
+            "user": student_data.__dict__,
             "type": type
         }
     raise credentials_exception

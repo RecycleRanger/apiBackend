@@ -8,6 +8,7 @@ from app.api import deps
 from app import schemas
 from app import crud
 from app.core.auth import authenticate, create_access_token
+from app.core.types import UsrType
 
 from app.models.teacher import Teacher
 from app.models.student import Student
@@ -30,7 +31,7 @@ def login_teacher(
         username=form_data.username,
         password=form_data.password,
         db=db,
-        usrType="teacher"
+        usrType=UsrType.teacher
     )
     if not teacher:
         raise HTTPException(
@@ -38,7 +39,7 @@ def login_teacher(
             detail="Incorect username or password"
         )
     return {
-        "access_token": create_access_token(sub=teacher.id, usr="teacher"),
+        "access_token": create_access_token(sub=teacher.id, usr=UsrType.teacher),
         "token_type": "bearer",
     }
 
@@ -55,7 +56,7 @@ def login_student(
         username=form_data.username,
         password=form_data.password,
         db=db,
-        usrType="student"
+        usrType=UsrType.student
     )
     if not student:
         raise HTTPException(
@@ -64,7 +65,7 @@ def login_student(
         )
 
     return {
-        "access_token": create_access_token(sub=student.id, usr="student"),
+        "access_token": create_access_token(sub=student.id, usr=UsrType.student),
         "token_type": "bearer",
     }
 

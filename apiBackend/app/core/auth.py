@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm.session import Session
 from jose import jwt
 
+from app.core.types import UsrType
 from app.models.teacher import Teacher
 from app.models.student import Student
 from app import schemas
@@ -32,11 +33,11 @@ def authenticate(
         username: str,
         password: str,
         db: Session,
-        usrType: str,
+        usrType: UsrType,
 ) -> Teacher | Student | None:
 
     # type: ignore
-    if usrType == "teacher":
+    if usrType == UsrType.teacher:
         user = db.query(Teacher) \
                     .filter(Teacher.username == username) \
                     .first()
@@ -52,7 +53,7 @@ def authenticate(
         return None
     return user
 
-def create_access_token(*, sub: str, usr: str) -> str:
+def create_access_token(*, sub: str, usr: UsrType) -> str:
     return _create_token(
         token_type="access_token",
         lifetime=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -64,7 +65,7 @@ def _create_token(
         token_type: str,
         lifetime: timedelta,
         sub: str,
-        usr: str,
+        usr: UsrType,
 ) -> str:
     payload = {}
     expire = datetime.utcnow() + lifetime
@@ -72,7 +73,7 @@ def _create_token(
     payload["exp"] = expire
     payload["iat"] = datetime.utcnow()
     payload["sub"] = str(sub)
-    payload["usr"] = str(usr)
+    payload["usr"] = usr
 
     return jwt.encode(
         payload,
