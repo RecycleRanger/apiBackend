@@ -8,7 +8,7 @@ from app.api import deps
 from app import schemas
 from app import crud
 from app.core.auth import authenticate, create_access_token
-from app.core.types import UsrType
+from app.core.myTypes import UsrType, CurrentUsr
 
 from app.models.teacher import Teacher
 from app.models.student import Student
@@ -72,7 +72,7 @@ def login_student(
 
 @router.get("/me")
 def read_users_me(
-        current_user: Teacher | Student = Depends(deps.get_user)
+        current_user: CurrentUsr = Depends(deps.get_user)
 ):
     """
     Fetch the current logged in user.

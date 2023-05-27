@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm.session import Session
 from jose import jwt
 
-from app.core.types import UsrType
+from app.core.myTypes import UsrType
 from app.models.teacher import Teacher
 from app.models.student import Student
 from app import schemas
@@ -48,15 +48,8 @@ def authenticate(
 
     if not user:
         return None
-<<<<<<< Updated upstream
-=======
-    # type: ignore
-    if not verify_password(password, teacher.hashed_password):
-        return None
-    return teacher
->>>>>>> Stashed changes
 
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, str(user.hashed_password)):
         return None
     return user
 
@@ -80,7 +73,7 @@ def _create_token(
     payload["exp"] = expire
     payload["iat"] = datetime.utcnow()
     payload["sub"] = str(sub)
-    payload["usr"] = usr
+    payload["usr"] = usr.value
 
     return jwt.encode(
         payload,
