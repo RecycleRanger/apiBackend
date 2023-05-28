@@ -25,3 +25,9 @@ User = TypeVar("User", Teacher, Student)
 class CurrentUsr(Generic[User]):
     user: User
     type: UsrType
+
+
+@dataclass
+class GeneratedPassCode:
+    student_id: int
+    passcode: str

@@ -1,10 +1,12 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 from app.schemas.waste import Waste
 
 
 class StudentBase(BaseModel):
-    student_name: str
+    student_name: Optional[str] = None
     score: int
     class_id: int
 

@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional, Union, List
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
@@ -17,11 +18,26 @@ class CRUDTeacher(CRUDBase[Teacher, TeacherCreate, TeacherUpdate]):
     ) -> Teacher:
         create_data = obj_in.dict()
         create_data.pop("password")
-        db_obj = Teacher(**create_data)
-        db_obj.hashed_password = get_password_hash(obj_in.password)
+        db_obj: Teacher = Teacher(**create_data) # type: ignore
+        db_obj.hashed_password = get_password_hash(obj_in.password) # type: ignore
         db.add(db_obj)
         db.commit()
 
         return db_obj
+
+    def update_datetime(
+            self,
+            *,
+            db: Session,
+            teacher_id: int,
+    ) -> bool:
+        hasStarted: Teacher = self.get(db, teacher_id) # type: ignore
+        query = 0
+        if not bool(hasStarted.date_started):
+            query = db.query(Teacher) \
+                    .filter(Teacher.id == teacher_id) \
+                    .update({Teacher.date_started: datetime.now()}, synchronize_session=False)
+            db.commit()
+        return not not query
 
 teacher = CRUDTeacher(Teacher)
