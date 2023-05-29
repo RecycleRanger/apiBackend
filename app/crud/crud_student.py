@@ -6,9 +6,11 @@ from fastapi.encoders import jsonable_encoder
 
 from app.crud.base import CRUDBase, NoUserFoundInDB
 from app.models.student import Student
+from app.models.teacher import Teacher
 from app.schemas.student import StudentCreate, StudentUpdate
 from app.core.security import get_password_hash
 from app.core.myError import Result, Ok, Err
+from app.crud.crud_teacher import teacher
 
 
 class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
@@ -19,14 +21,18 @@ class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
             *,
             obj_in: StudentCreate
     ) -> Student:
-        create_data = obj_in.dict()
-        create_data.pop("password")
-        db_obj = Student(**create_data)
-        db_obj.hashed_password = get_password_hash(obj_in.password)
-        db.add(db_obj)
-        db.commit()
+        match teacher.get(db=db, id=obj_in.class_id):
+            case Ok(v):
+                create_data = obj_in.dict()
+                create_data.pop("password")
+                db_obj = Student(**create_data)
+                db_obj.hashed_password = get_password_hash(obj_in.password) # type: ignore
+                db.add(db_obj)
+                db.commit()
 
-        return db_obj
+                return db_obj
+            case Err(e):
+                raise e.httpError() from e
 
     def get_class(
             self,

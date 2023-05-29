@@ -31,7 +31,7 @@ async def update_student_password(
     if current_user.type == UsrType.teacher:
         match crud.student.get(db=db, id=student_id):
             case Ok(v): student: Student = v
-            case Err(e): raise e
+            case Err(e): raise e.httpError() from e
         if current_user.user.id == student.class_id:
             crud.student.update_password(db=db, student_id=student_id, newPassword=newPassword)
         raise credential_error("You don't have access to this student")
@@ -53,7 +53,7 @@ async def update_student_name(
     if current_user.type == UsrType.teacher:
         match crud.student.get(db=db, id=student_id):
             case Ok(v): student: Student = v
-            case Err(e): raise e
+            case Err(e): raise e.httpError() from e
         if current_user.user.id == student.class_id:
             crud.student.update_name(db=db, student_id=student_id, newName=newName)
         raise credential_error("You don't have access to this student")
@@ -75,7 +75,7 @@ async def update_student_score(
     if current_user.type == UsrType.teacher:
         match crud.student.get(db=db, id=student_id):
             case Ok(v): student: Student = v
-            case Err(e): raise e
+            case Err(e): raise e.httpError() from e
         if current_user.user.id == student.class_id:
             crud.student.update_score(db=db, student_id=student_id, newScore=newScore)
         raise credential_error("You don't have access to this student")

@@ -34,7 +34,7 @@ class CRUDTeacher(CRUDBase[Teacher, TeacherCreate, TeacherUpdate]):
     ) -> bool:
         match self.get(db, teacher_id):
             case Ok(v): hasStarted: Teacher = v
-            case Err(e): raise e
+            case Err(e): raise e.httpError() from e
         query = 0
         if not bool(hasStarted.date_started):
             query = db.query(Teacher) \

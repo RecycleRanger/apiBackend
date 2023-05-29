@@ -3,6 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from fastapi import HTTPException, status
 
 from app.db.base_class import Base
 from app.core.myError import Result, Ok, Err
@@ -14,6 +15,12 @@ class NoUserFoundInDB(Exception):
     def __init__(self, msg="No User was found on the database."):
         self.message = msg
         super().__init__(self.message)
+
+    def httpError(self):
+        return HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No User was found on the database."
+        )
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)

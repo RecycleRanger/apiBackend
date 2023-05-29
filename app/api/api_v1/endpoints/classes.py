@@ -108,5 +108,5 @@ async def start_date(
         if teacher:
             match crud.teacher.get(db=db, id=current_user.user.id):
                 case Ok(v): return v
-                case Err(e): raise e
+                case Err(e): raise e.httpError() from e
     raise credential_error("You are not authorized to make this action. Please log in.")
