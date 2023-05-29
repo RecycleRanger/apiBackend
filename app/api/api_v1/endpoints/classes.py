@@ -1,7 +1,6 @@
-from typing import Any, Union, Callable, TypeVar
+from typing import Any, Callable, TypeVar
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm.session import Session
 
 from app.api import deps
@@ -12,6 +11,7 @@ from app import schemas
 from app.core.myTypes import UsrType, CurrentUsr, GeneratedPassCode
 from app.core.passwordGenerator import get_passwords
 from app import crud
+from app.core.myError import Ok, Err
 
 
 router = APIRouter()
@@ -61,8 +61,8 @@ def get_class(
             raise credential_error("You are trying to access a class you are not a member of.")
     raise credential_error("You don't have access to this information. Please log in.")
 
-@router.post("/autogenerate/{num}")
-def post_autogenerate_class(
+@router.post("/autogenerate/{num}", response_model=list[GeneratedPassCode])
+async def post_autogenerate_class(
         num: int,
         skip: int = 0,
         limit: int = 100,
@@ -75,23 +75,38 @@ def post_autogenerate_class(
 
     if current_user.type == UsrType.teacher:
         teacher_id = current_user.user.id
-        if crud.teacher.update_datetime(db=db, teacher_id=teacher_id):
-            res: list[GeneratedPassCode] = []
-            passwords: list[str] = get_passwords(num)
+        res: list[GeneratedPassCode] = []
+        passwords: list[str] = get_passwords(num)
 
-            for i in range(num):
-                student_out = crud.student.create(
-                    db=db,
-                    obj_in=schemas.StudentCreate(
-                        class_id=teacher_id,
-                        score=0,
-                        password=passwords[i]
-                    )
+        for i in range(num):
+            student_out = crud.student.create(
+                db=db,
+                obj_in=schemas.StudentCreate(
+                    class_id=teacher_id,
+                    score=0,
+                    password=passwords[i]
                 )
-                res.append(GeneratedPassCode(
-                    student_id=student_out.id,
-                    passcode=passwords[i]
-                ))
-            return res
+            )
+            res.append(GeneratedPassCode(
+                student_id=student_out.id,
+                passcode=passwords[i]
+            ))
+        return res
+    raise credential_error("You are not authorized to make this action. Please log in.")
 
+@router.patch("/start_game", response_model=schemas.Teacher)
+async def start_date(
+        db: Session = Depends(deps.get_db),
+        current_user: CurrentUsr = Depends(deps.get_current_user),
+) -> Teacher:
+    """
+    Update `Teacher` date_started field
+    """
+
+    if current_user.type == UsrType.teacher:
+        teacher = crud.teacher.update_datetime(db=db, teacher_id=current_user.user.id)
+        if teacher:
+            match crud.teacher.get(db=db, id=current_user.user.id):
+                case Ok(v): return v
+                case Err(e): raise e
     raise credential_error("You are not authorized to make this action. Please log in.")

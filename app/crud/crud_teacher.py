@@ -7,6 +7,7 @@ from app.crud.base import CRUDBase
 from app.models.teacher import Teacher
 from app.schemas.teacher import TeacherCreate, TeacherUpdate
 from app.core.security import get_password_hash
+from app.core.myError import Result, Ok, Err
 
 
 class CRUDTeacher(CRUDBase[Teacher, TeacherCreate, TeacherUpdate]):
@@ -31,7 +32,9 @@ class CRUDTeacher(CRUDBase[Teacher, TeacherCreate, TeacherUpdate]):
             db: Session,
             teacher_id: int,
     ) -> bool:
-        hasStarted: Teacher = self.get(db, teacher_id) # type: ignore
+        match self.get(db, teacher_id):
+            case Ok(v): hasStarted: Teacher = v
+            case Err(e): raise e
         query = 0
         if not bool(hasStarted.date_started):
             query = db.query(Teacher) \

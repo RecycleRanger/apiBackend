@@ -5,7 +5,15 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.db.base_class import Base
+from app.core.myError import Result, Ok, Err
 
+
+class NoUserFoundInDB(Exception):
+    """Raised when query from database finds no match"""
+
+    def __init__(self, msg="No User was found on the database."):
+        self.message = msg
+        super().__init__(self.message)
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -22,10 +30,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         self.model = model
 
-    def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        return db.query(self.model) \
-                 .filter(self.model.id == id) \
-                 .first()
+    def get(self, db: Session, id: Any) -> Result[ModelType, NoUserFoundInDB]:
+        search = db.query(self.model) \
+                   .filter(self.model.id == id) \
+                   .first()
+        if not search:
+            return Err(NoUserFoundInDB("No user was found in the database"))
+        return Ok(search)
 
     def get_multi(
             self,
