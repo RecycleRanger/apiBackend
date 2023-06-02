@@ -8,7 +8,7 @@ from app.api import deps
 from app import schemas
 from app import crud
 from app.core.auth import authenticate, create_access_token
-from app.core.myTypes import UsrType, CurrentUsr
+from app.core.myTypes import UsrType, CurrentUsr, AdditionalUserDataForm
 
 from app.models.teacher import Teacher
 from app.models.student import Student
@@ -46,13 +46,15 @@ def login_teacher(
 @router.post("/login/student")
 def login_student(
         db: Session = Depends(deps.get_db),
-        form_data: OAuth2PasswordRequestForm = Depends()
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        additional_form_data: AdditionalUserDataForm = Depends()
 ) -> Any:
     """
     Get the JWT for a student with data from OAuth2 request form body.
     """
 
     student = authenticate(
+        id=additional_form_data.id,
         username=form_data.username,
         password=form_data.password,
         db=db,

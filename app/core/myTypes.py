@@ -1,6 +1,7 @@
-from typing import Generic, TypeVar, Union
+from typing import Generic, Optional, TypeVar, Union
 from enum import Enum
 from dataclasses import dataclass
+from fastapi import Form
 from pydantic import BaseModel
 
 from app.models import Teacher
@@ -26,8 +27,11 @@ class CurrentUsr(Generic[User]):
     user: User
     type: UsrType
 
-
 @dataclass
 class GeneratedPassCode:
     student_id: int
     passcode: str
+
+@dataclass
+class AdditionalUserDataForm:
+    id: Optional[int] = Form(None)

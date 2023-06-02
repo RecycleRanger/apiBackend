@@ -69,24 +69,32 @@ async def get_user(
                     raise credentials_exception
 
     if type == UsrType.teacher:
-        teacher_data = crud_teacher.teacher.get(
+        match crud_teacher.teacher.get(
             db=db,
             id=user_id
-        )
+        ):
+            case Ok(v):
+                teacher_data = v;
+            case Err(e):
+                raise e.httpError() from e
         if teacher_data is None:
             raise credentials_exception
-        return CurrentUsr(
+        return CurrentUsr[Teacher](
             user=teacher_data,
             type=type
         )
     elif type == UsrType.student:
-        student_data = crud_student.student.get(
+        match crud_student.student.get(
             db=db,
             id=user_id
-        )
+        ):
+            case Ok(v):
+                student_data = v;
+            case Err(e):
+                raise e.httpError() from e
         if student_data is None:
             raise credentials_exception
-        return CurrentUsr(
+        return CurrentUsr[Student](
             user=student_data,
             type=type
         )

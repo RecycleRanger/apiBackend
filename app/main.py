@@ -40,4 +40,6 @@ app.include_router(root_router)
 
 if __name__=="__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="debug")
+    import os
+    cwd = os.path.join(os.getcwd(), "app")
+    uvicorn.run("main:app", host="0.0.0.0", port=8001, log_level="debug", reload=True, reload_dirs=[cwd])

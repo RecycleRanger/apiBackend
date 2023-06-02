@@ -30,7 +30,8 @@ student_oauth2_scheme = OAuth2PasswordBearer(
 
 def authenticate(
         *,
-        username: str,
+        id: Optional[int] = None,
+        username: Optional[str] = None,
         password: str,
         db: Session,
         usrType: UsrType,
@@ -42,11 +43,16 @@ def authenticate(
                     .filter(Teacher.username == username) \
                     .first()
     else:
-        user = db.query(Student) \
-                 .filter(Student.student_name == username) \
-                 .first()
+        if id:
+            user = db.query(Student) \
+                     .filter(Student.id == int(id)) \
+                     .first()
+        else:
+            user = db.query(Student) \
+                     .filter(Student.student_name == username) \
+                     .first()
 
-    if not user:
+    if not user: # type: ignore
         return None
 
     if not verify_password(password, str(user.hashed_password)):
