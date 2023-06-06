@@ -9,8 +9,12 @@ from app.api.api_v1.api import api_router
 from app.core.config import settings
 
 
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+)
+
 root_router = APIRouter()
-app = FastAPI(title="RecycleRanger", openapi_url=f"{settings.API_V1_STR}/openapi.json")
 
 @root_router.get("/", status_code=200)
 def root(
@@ -21,19 +25,6 @@ def root(
     Root GET
     """
     return {"msg": "hello world"}
-
-@root_router.get("/test/{class_id}", status_code=200)
-def test(class_id: int, db: Session = Depends(deps.get_db)):
-    return crud.student.get_class_cens(db=db, class_id=class_id)
-
-@root_router.post("/test/createteacher", response_model=schemas.Teacher, status_code=201)
-def create_teacher(
-        *,
-        db: Session = Depends(deps.get_db),
-        teacher_in: TeacherCreate,
-) -> Any:
-    teacher = crud.teacher.create(db=db, obj_in=teacher_in)
-    return teacher
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)
