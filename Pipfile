@@ -15,8 +15,8 @@ python-jose = "*"
 python-multipart = "*"
 
 [scripts]
-export = "export PYTHONPATH=$PWD"
-dev = "python app/main.py"
+dev = "python run.py dev"
+prod = "python run.py prod"
 
 [dev-packages]
 

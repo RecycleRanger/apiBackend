@@ -37,9 +37,3 @@ def create_teacher(
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)
-
-if __name__=="__main__":
-    import uvicorn
-    import os
-    cwd = os.path.join(os.getcwd(), "app")
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, log_level="debug", reload=True, reload_dirs=[cwd])
