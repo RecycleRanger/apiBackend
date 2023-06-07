@@ -12,8 +12,14 @@ class WasteCreate(WasteBase):
 class WasteUpdate(WasteBase):
     ...
 
-class Waste(WasteBase):
+class WasteInDBBase(WasteBase):
     id: int
 
     class Config:
         orm_mode = True
+
+class WasteInDB(WasteInDBBase):
+    ...
+
+class Waste(WasteInDBBase):
+    ...

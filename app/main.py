@@ -26,5 +26,5 @@ def root(
     """
     return {"msg": "hello world"}
 
-app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)
+app.include_router(api_router, prefix=settings.API_V1_STR)

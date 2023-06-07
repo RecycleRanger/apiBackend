@@ -25,7 +25,7 @@ class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
             case Ok(v):
                 create_data = obj_in.dict()
                 create_data.pop("password")
-                db_obj = Student(**create_data)
+                db_obj = Student(**create_data) # type: ignore
                 db_obj.hashed_password = get_password_hash(obj_in.password) # type: ignore
                 db.add(db_obj)
                 db.commit()
@@ -109,6 +109,30 @@ class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
             query = db.query(Student) \
                       .filter(Student.id == student_id) \
                       .update({Student.score: newScore}, synchronize_session=False)
+            db.commit()
+            return bool(query)
+        except:
+            raise NoUserFoundInDB
+
+    def update_numOfTrash(
+            self,
+            *,
+            db: Session,
+            student_id: int,
+    ) -> bool:
+
+        try:
+            match self.get(db=db, id=student_id):
+                case Ok(v):
+                    if v.numOfTrash == None: # type: ignore
+                        numOfTrash = 1
+                    else:
+                        numOfTrash = v.numOfTrash + 1
+                case Err(e):
+                    raise e.httpError() from e
+            query = db.query(Student) \
+                      .filter(Student.id == student_id) \
+                      .update({Student.numOfTrash: numOfTrash}, synchronize_session=False)
             db.commit()
             return bool(query)
         except:
