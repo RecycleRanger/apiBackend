@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.crud.base import CRUDBase
+from app.crud.base import CRUDBase, NoUserFoundInDB
 from app.models.teacher import Teacher
 from app.schemas.teacher import TeacherCreate, TeacherUpdate
 from app.core.security import get_password_hash
@@ -25,6 +25,18 @@ class CRUDTeacher(CRUDBase[Teacher, TeacherCreate, TeacherUpdate]):
         db.commit()
 
         return db_obj
+
+    def get_by_username(
+            self,
+            db: Session,
+            username: str,
+    ) -> Result[Teacher, NoUserFoundInDB]:
+        search = db.query(Teacher) \
+                   .filter(Teacher.username == username) \
+                   .first()
+        if not search:
+            return Err(NoUserFoundInDB("No user found in the database"))
+        return Ok(search)
 
     def update_datetime(
             self,

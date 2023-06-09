@@ -8,9 +8,10 @@ from jose import jwt
 from app.core.myTypes import UsrType
 from app.models.teacher import Teacher
 from app.models.student import Student
-from app import schemas
+from app import crud, schemas
 from app.core.config import settings
 from app.core.security import verify_password
+from app.core.myError import Ok, Err
 
 
 JWTPayloadMapping = MutableMapping[
@@ -38,19 +39,27 @@ def authenticate(
 ) -> Teacher | Student | None:
 
     # type: ignore
-    if usrType == UsrType.teacher:
-        user = db.query(Teacher) \
-                    .filter(Teacher.username == username) \
-                    .first()
+    if usrType == UsrType.teacher and username:
+        match crud.teacher.get_by_username(db=db, username=username):
+            case Ok(v):
+                user = v
+            case Err(e):
+                return None
     else:
         if id:
-            user = db.query(Student) \
-                     .filter(Student.id == int(id)) \
-                     .first()
+            match crud.student.get(db=db, id=int(id)):
+                case Ok(v):
+                    user = v
+                case Err(e):
+                    return None
+        elif username:
+            match crud.student.get_by_username(db=db, username=username):
+                case Ok(v):
+                    user = v
+                case Err(e):
+                    return None
         else:
-            user = db.query(Student) \
-                     .filter(Student.student_name == username) \
-                     .first()
+            return None
 
     if not user: # type: ignore
         return None

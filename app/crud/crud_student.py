@@ -34,6 +34,18 @@ class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
             case Err(e):
                 raise e.httpError() from e
 
+    def get_by_username(
+            self,
+            db: Session,
+            username: str,
+    ) -> Result[Student, NoUserFoundInDB]:
+        search = db.query(Student) \
+                   .filter(Student.student_name == username) \
+                   .first()
+        if not search:
+            return Err(NoUserFoundInDB("No user found in the database"))
+        return Ok(search)
+
     def get_class(
             self,
             db: Session,
