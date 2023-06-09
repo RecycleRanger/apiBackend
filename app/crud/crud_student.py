@@ -2,9 +2,10 @@ from threading import excepthook
 from typing import Any, Dict, Optional, Union, List
 
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 from fastapi.encoders import jsonable_encoder
 
-from app.crud.base import CRUDBase, NoUserFoundInDB
+from app.crud.base import CRUDBase, NoUserFoundInDB, InvalidDataQuery
 from app.models.student import Student
 from app.models.teacher import Teacher
 from app.schemas.student import StudentCreate, StudentUpdate
@@ -38,10 +39,13 @@ class CRUDStudent(CRUDBase[Student, StudentCreate, StudentUpdate]):
             self,
             db: Session,
             username: str,
-    ) -> Result[Student, NoUserFoundInDB]:
-        search = db.query(Student) \
-                   .filter(Student.student_name == username) \
-                   .first()
+    ) -> Result[Student, NoUserFoundInDB | InvalidDataQuery]:
+        try:
+            search = db.query(Student) \
+                    .filter(Student.student_name == username) \
+                    .first()
+        except OperationalError:
+            return Err(InvalidDataQuery())
         if not search:
             return Err(NoUserFoundInDB("No user found in the database"))
         return Ok(search)

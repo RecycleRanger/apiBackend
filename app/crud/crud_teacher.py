@@ -2,8 +2,9 @@ from typing import Any, Dict, Optional, Union, List
 from datetime import datetime
 
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 
-from app.crud.base import CRUDBase, NoUserFoundInDB
+from app.crud.base import CRUDBase, NoUserFoundInDB, InvalidDataQuery
 from app.models.teacher import Teacher
 from app.schemas.teacher import TeacherCreate, TeacherUpdate
 from app.core.security import get_password_hash
@@ -30,10 +31,13 @@ class CRUDTeacher(CRUDBase[Teacher, TeacherCreate, TeacherUpdate]):
             self,
             db: Session,
             username: str,
-    ) -> Result[Teacher, NoUserFoundInDB]:
-        search = db.query(Teacher) \
-                   .filter(Teacher.username == username) \
-                   .first()
+    ) -> Result[Teacher, NoUserFoundInDB | InvalidDataQuery]:
+        try:
+            search = db.query(Teacher) \
+                    .filter(Teacher.username == username) \
+                    .first()
+        except OperationalError:
+            return Err(InvalidDataQuery())
         if not search:
             return Err(NoUserFoundInDB("No user found in the database"))
         return Ok(search)

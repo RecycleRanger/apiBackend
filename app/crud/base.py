@@ -3,6 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 from fastapi import HTTPException, status
 
 from app.db.base_class import Base
@@ -22,6 +23,19 @@ class NoUserFoundInDB(Exception):
             detail="No User was found on the database."
         )
 
+class InvalidDataQuery(Exception):
+    """Raised when query from database has invalid data"""
+
+    def __init__(self, msg="Invalid data in query"):
+        self.message = msg
+        super().__init__(self.message)
+
+    def httpError(self):
+        return HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid data in db query."
+        )
+
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
@@ -37,10 +51,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         self.model = model
 
-    def get(self, db: Session, id: Any) -> Result[ModelType, NoUserFoundInDB]:
-        search = db.query(self.model) \
-                   .filter(self.model.id == id) \
-                   .first()
+    def get(self, db: Session, id: Any) -> Result[ModelType, NoUserFoundInDB | InvalidDataQuery]:
+        try:
+            search = db.query(self.model) \
+                    .filter(self.model.id == id) \
+                    .first()
+        except OperationalError:
+            return Err(InvalidDataQuery())
         if not search:
             return Err(NoUserFoundInDB("No user was found in the database"))
         return Ok(search)

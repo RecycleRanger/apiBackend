@@ -9,6 +9,7 @@ from app.core.myTypes import UsrType
 from app.models.teacher import Teacher
 from app.models.student import Student
 from app import crud, schemas
+from app.crud.base import InvalidDataQuery, NoUserFoundInDB
 from app.core.config import settings
 from app.core.security import verify_password
 from app.core.myError import Ok, Err
