@@ -13,6 +13,7 @@ pydantic = {extras = ["dotenv"], version = "*"}
 passlib = "*"
 python-jose = "*"
 python-multipart = "*"
+bcrypt = "*"
 
 [scripts]
 dev = "python run.py dev"
