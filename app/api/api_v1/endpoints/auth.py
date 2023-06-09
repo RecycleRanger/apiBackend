@@ -41,6 +41,8 @@ def login_teacher(
     return {
         "access_token": create_access_token(sub=teacher.id, usr=UsrType.teacher),
         "token_type": "bearer",
+        "usr": teacher,
+        "type": UsrType.teacher,
     }
 
 @router.post("/login/student")
@@ -69,6 +71,8 @@ def login_student(
     return {
         "access_token": create_access_token(sub=student.id, usr=UsrType.student),
         "token_type": "bearer",
+        "usr": student,
+        "type": UsrType.student,
     }
 
 
