@@ -1,6 +1,7 @@
 from typing import Any, Union
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm.session import Session
 
@@ -38,6 +39,9 @@ def login_teacher(
             status_code=400,
             detail="Incorect username or password"
         )
+    teacher = jsonable_encoder(teacher)
+    del teacher["hashed_password"]
+    teacher = Teacher(**teacher)
     return {
         "access_token": create_access_token(sub=teacher.id, usr=UsrType.teacher),
         "token_type": "bearer",
@@ -68,6 +72,9 @@ def login_student(
             detail="Incorect username or password"
         )
 
+    student = jsonable_encoder(student)
+    del student["hashed_password"]
+    student = Student(**student)
     return {
         "access_token": create_access_token(sub=student.id, usr=UsrType.student),
         "token_type": "bearer",
@@ -85,6 +92,8 @@ def read_users_me(
     """
 
     user = current_user
+    user = jsonable_encoder(user)
+    del user["user"]["hashed_password"]
     return user
 
 @router.post("/signup/teacher", response_model=schemas.Teacher, status_code=201)
