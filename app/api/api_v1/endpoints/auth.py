@@ -1,6 +1,6 @@
 from typing import Any, Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm.session import Session
@@ -105,6 +105,12 @@ def create_teacher_signup(
     """
     Create new teacher with signup
     """
+
+    if teacher_in.username == "" or teacher_in.password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Can't have empty username or password"
+        )
 
     teacher = db.query(Teacher) \
                 .filter(Teacher.username == teacher_in.username) \
