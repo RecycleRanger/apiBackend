@@ -106,7 +106,7 @@ def create_teacher_signup(
     Create new teacher with signup
     """
 
-    if teacher_in.username == "" or teacher_in.password:
+    if teacher_in.username == "" or teacher_in.password == "":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Can't have empty username or password"
