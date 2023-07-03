@@ -28,7 +28,12 @@ def login_teacher(
     Get the JWT for a teacher with data from OAuth2 request form body.
     """
 
-    print(form_data)
+    print(form_data.grant_type)
+    print(form_data.username)
+    print(form_data.password)
+    print(form_data.scopes)
+    print(form_data.client_id)
+    print(form_data.client_secret)
     teacher = authenticate(
         username=form_data.username,
         password=form_data.password,
