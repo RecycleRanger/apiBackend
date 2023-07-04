@@ -28,12 +28,6 @@ def login_teacher(
     Get the JWT for a teacher with data from OAuth2 request form body.
     """
 
-    print(form_data.grant_type)
-    print(form_data.username)
-    print(form_data.password)
-    print(form_data.scopes)
-    print(form_data.client_id)
-    print(form_data.client_secret)
     teacher = authenticate(
         username=form_data.username,
         password=form_data.password,
@@ -65,6 +59,7 @@ def login_student(
     Get the JWT for a student with data from OAuth2 request form body.
     """
 
+    print(additional_form_data.id)
     student = authenticate(
         id=additional_form_data.id,
         username=form_data.username,
