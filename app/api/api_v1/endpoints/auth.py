@@ -59,9 +59,6 @@ def login_student(
     Get the JWT for a student with data from OAuth2 request form body.
     """
 
-    print(additional_form_data.id)
-    print(form_data.username)
-    print(form_data.password)
     student = authenticate(
         id=additional_form_data.id,
         username=form_data.username,
