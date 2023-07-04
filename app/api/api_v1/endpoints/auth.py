@@ -60,6 +60,8 @@ def login_student(
     """
 
     print(additional_form_data.id)
+    print(form_data.username)
+    print(form_data.password)
     student = authenticate(
         id=additional_form_data.id,
         username=form_data.username,
