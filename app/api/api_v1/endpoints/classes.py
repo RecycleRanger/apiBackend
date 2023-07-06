@@ -97,7 +97,7 @@ async def post_autogenerate_class(
 @router.patch("/start_game", response_model=schemas.Teacher)
 async def start_date(
         db: Session = Depends(deps.get_db),
-        current_user: CurrentUsr = Depends(deps.get_current_user),
+        current_user: CurrentUsr = Depends(deps.get_user),
 ) -> Teacher:
     """
     Update `Teacher` date_started field
