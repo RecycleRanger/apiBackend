@@ -28,3 +28,6 @@ class StudentInDB(StudentInDBBase):
 
 class Student(StudentInDBBase):
     ...
+
+class StudentN(StudentInDBBase):
+    numOfTrash: Optional[int]

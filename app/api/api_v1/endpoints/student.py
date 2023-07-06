@@ -19,6 +19,21 @@ credential_error: Callable[[str], Any] = lambda msg: HTTPException(
     detail=msg,
 )
 
+@router.get("/{student_id}", response_model=schemas.StudentN)
+async def get_student(
+        student_id: int,
+        db: Session = Depends(deps.get_db),
+        current_usr: CurrentUsr = Depends(deps.get_user)
+) -> Any:
+    """
+    Get `Student` info
+    """
+
+    if current_usr.type == UsrType.teacher or current_usr.type == UsrType.student:
+        match crud.student.get(db=db, id=student_id):
+            case Ok(v): return v
+            case Err(e): raise e.httpError() from e
+
 @router.patch("/update_password")
 async def update_student_password(
         newPassword: str,
